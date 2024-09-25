@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'FixelDisplay';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/fonts/FixelDisplay-Medium.woff2) format('woff2');
+  }
+}
+body {
+  font-family: 'FixelDisplay';
+  max-width: 1440px;
+  margin: 0 auto;
+}
