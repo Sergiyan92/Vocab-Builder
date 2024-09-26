@@ -1,7 +1,6 @@
 <script setup>
 import LogoIcon from '../icons/LogoIcon.vue'
 import { RouterLink, RouterView } from 'vue-router'
-import BaseLayout from '../BaseLayout.vue'
 import BurgerMenu from '../icons/BurgerMenu.vue'
 import ArrowRight from '../icons/ArrowRight.vue'
 import UserIcon from '../icons/UserIcon.vue'
@@ -13,8 +12,8 @@ const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <div class="container layout mr-[100px] ml-[100px]">
-    <header class="flex items-center justify-between w-full max-w-[1240px] mt-[20px] mb-[20px]">
+  <div class="layout mr-[100px] ml-[100px]">
+    <header class="flex items-center justify-between w-full max-w-[1280px] mt-[20px] mb-[20px]">
       <LogoIcon />
       <!-- Навігація для десктопу, схована на планшетах -->
       <nav class="hidden md:flex items-center">
@@ -52,14 +51,14 @@ const isMenuOpen = ref(false)
           <BurgerMenu @click="isMenuOpen = !isMenuOpen" />
         </div>
 
-        <div class="hidden md:flex logout items-center">
+        <button type="button" class="hidden md:flex logout items-center">
           Log out <ArrowRight class="ml-[6px] stroke-black" />
-        </div>
+        </button>
       </div>
 
       <!-- Бургер-меню (мобільне/планшетне відображення навігації) -->
       <transition name="fade">
-        <div v-if="isMenuOpen" class="fixed top-0 left-[467px] w-[300px] h-full bg-green z-50">
+        <div v-if="isMenuOpen" class="fixed top-0 left-[436px] w-[300px] h-full bg-green z-50">
           <div class="flex items-center ml-[32px] mt-[20px]">
             <h3 class="text-main">Irina</h3>
             <div
@@ -113,6 +112,7 @@ const isMenuOpen = ref(false)
     display: none;
   }
   .layout{
+    width: 704px;
     margin-left: 32px;
     margin-right: 32px;
   }
