@@ -1,3 +1,3 @@
 <template>
-    <div>Training</div>
+    <div class="h-full">Training</div>
 </template>

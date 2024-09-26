@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const Dictionary = () => import('../components/Dictionary/DictionaryComponent.vue')
+const Dictionary = () => import('../views/DictionaryPage/DictionaryPage.vue')
 const Recommend = () => import('@/components/Recommend/RecommendComponent.vue')
 const Training = () => import('@/components/Training/TrainingComponent.vue')
 

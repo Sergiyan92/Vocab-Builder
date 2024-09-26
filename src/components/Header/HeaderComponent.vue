@@ -7,15 +7,14 @@ import ArrowRight from '../icons/ArrowRight.vue'
 import UserIcon from '../icons/UserIcon.vue'
 import { ref } from 'vue'
 import CloseIcon from '../icons/CloseIcon.vue'
+import BG from '../icons/BG.vue'
 
-const isMenuOpen = ref(false) // Стан для відкриття/закриття бургер-меню
+const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <BaseLayout>
-    <header
-      class="flex container items-center justify-between w-full max-w-[1240px] mt-[20px] mb-[20px]"
-    >
+  <div class="container layout mr-[100px] ml-[100px]">
+    <header class="flex items-center justify-between w-full max-w-[1240px] mt-[20px] mb-[20px]">
       <LogoIcon />
       <!-- Навігація для десктопу, схована на планшетах -->
       <nav class="hidden md:flex items-center">
@@ -57,51 +56,51 @@ const isMenuOpen = ref(false) // Стан для відкриття/закрит
           Log out <ArrowRight class="ml-[6px] stroke-black" />
         </div>
       </div>
+
+      <!-- Бургер-меню (мобільне/планшетне відображення навігації) -->
+      <transition name="fade">
+        <div v-if="isMenuOpen" class="fixed top-0 left-[467px] w-[300px] h-full bg-green z-50">
+          <div class="flex items-center ml-[32px] mt-[20px]">
+            <h3 class="text-main">Irina</h3>
+            <div
+              class="bg-main w-[48px] h-[48px] rounded-full flex items-center justify-center ml-[10px] mr-[16px]"
+            >
+              <UserIcon class="fill-green" />
+            </div>
+            <button type="button" @click="isMenuOpen = !isMenuOpen" class="ml-[83px]">
+              <CloseIcon />
+            </button>
+          </div>
+
+          <div class="flex flex-col mt-[170px] mb-[167px] ml-[32px] w-[110px]">
+            <router-link
+              exact-active-class="text-bal  bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
+              class="text-main text-medium font-standart mb-[20px]"
+              to="/dictionary"
+              >Dictionary</router-link
+            >
+            <router-link
+              exact-active-class="text-bal bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
+              class="text-main text-medium mb-[20px]"
+              to="/recommend"
+              >Recommend</router-link
+            >
+            <router-link
+              exact-active-class="text-bal bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
+              class="text-main text-medium mb-[20px]"
+              to="/training"
+              >Training</router-link
+            >
+            <div class="flex text-main items-center">
+              Log out <ArrowRight class="ml-[6px] stroke-main" />
+            </div>
+          </div>
+          <BG class="w-full" />
+        </div>
+      </transition>
     </header>
-
-    <!-- Бургер-меню (мобільне/планшетне відображення навігації) -->
-    <transition name="fade">
-      <div v-if="isMenuOpen" class="fixed top-0 left-[400px] w-[300px] h-full bg-green z-50">
-        <div class="flex items-center ml-[32px] mt-[20px]">
-          <h3 class="text-main">Irina</h3>
-          <div
-            class="bg-main w-[48px] h-[48px] rounded-full flex items-center justify-center ml-[10px] mr-[16px]"
-          >
-            <UserIcon class="fill-green" />
-          </div>
-          <button type="button" @click="isMenuOpen = !isMenuOpen" class="ml-[83px]">
-            <CloseIcon />
-          </button>
-        </div>
-
-        <div class="flex flex-col items-center mt-[40px]">
-          <router-link
-            class="text-main text-medium font-standart mb-[20px]"
-            exact-active-class="text-black  bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
-            to="/dictionary"
-            >Dictionary</router-link
-          >
-          <router-link
-            class="text-main text-medium mb-[20px]"
-            exact-active-class="text-black bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
-            to="/recommend"
-            >Recommend</router-link
-          >
-          <router-link
-            class="text-main text-medium mb-[20px]"
-            exact-active-class="text-black bg-main pt-[12px] pb-[12px] pl-[20px] pr-[20px] rounded-2xl text-medium"
-            to="/training"
-            >Training</router-link
-          >
-          <div class="flex text-main items-center">
-            Log out <ArrowRight class="ml-[6px] stroke-main" />
-          </div>
-        </div>
-      </div>
-    </transition>
-
     <router-view></router-view>
-  </BaseLayout>
+  </div>
 </template>
 
 <style scoped>
@@ -112,6 +111,10 @@ const isMenuOpen = ref(false) // Стан для відкриття/закрит
   }
   .logout {
     display: none;
+  }
+  .layout{
+    margin-left: 32px;
+    margin-right: 32px;
   }
 }
 

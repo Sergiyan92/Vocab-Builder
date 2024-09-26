@@ -5,14 +5,35 @@
 @layer base {
   @font-face {
     font-family: 'FixelDisplay';
+    src: url('/fonts/FixelDisplay-Regular.woff2') format('woff2');
+    font-weight: 400; /* Regular */
     font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-    src: url(/fonts/FixelDisplay-Medium.woff2) format('woff2');
+  }
+
+  @font-face {
+    font-family: 'FixelDisplay';
+    src: url('/fonts/FixelDisplay-Medium.woff2') format('woff2');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'FixelDisplay';
+    src: url('/fonts/FixelDisplay-SemiBold.woff2') format('woff2');
+    font-weight: 600; /* SemiBold */
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'FixelDisplay';
+    src: url('/fonts/FixelDisplay-Bold.woff2') format('woff2');
+    font-weight: 700; /* Bold */
+    font-style: normal;
   }
 }
+
 body {
-  font-family: 'FixelDisplay';
+  font-family: 'FixelDisplay', sans-serif; /* Додано запасний шрифт */
   max-width: 1440px;
   margin: 0 auto;
 }
