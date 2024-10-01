@@ -1,0 +1,1 @@
+import { getCategoryWord } from '@/api/wordApi/word'

@@ -7,14 +7,14 @@ import { useStore } from 'vuex';
 
 const store = useStore()
 
-const showAddWordModal = computed(()=>store.state.showAddWordModal)
+const isModalOpen = computed(()=>store.getters.isAddWordModalOpen)
 const closeAddWordModal = ()=> store.commit('closeAddWordModal')
 
 </script>
 
 <template>
   <div
-    v-if="showAddWordModal"
+    v-if="isModalOpen"
     class="fixed inset-0 flex justify-center items-center z-10"
   >
   <div @click="closeAddWordModal" class="absolute inset-0 bg-black opacity-20"></div>

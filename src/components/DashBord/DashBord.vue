@@ -5,10 +5,16 @@ import PlusIcon from '../icons/PlusIcon.vue'
 import SearchIcon from '../icons/SearchIcon.vue'
 import SelectIcon from '../icons/SelectIcon.vue'
 import { useStore } from 'vuex'
+import { computed, onMounted } from 'vue'
 
 const store = useStore()
 
 const openAddWordModal = () => store.commit('openAddWordModal')
+const categories = computed(() => store.getters.getCategoryList)
+
+onMounted(() => {
+  store.dispatch('loadCategory')
+})
 </script>
 
 <template>
@@ -26,13 +32,9 @@ const openAddWordModal = () => store.commit('openAddWordModal')
       <div class="relative w-[164px] ml-[8px]">
         <select
           name=""
-          id=""
           class="appearance-none border-[1px] pt-[12px] pb-[12px] pl-[24px] pr-[50px] rounded-2xl border-opacity-10 border-black placeholder:text-black w-full"
         >
-          <option>Phrasal verb</option>
-          <option>Verb</option>
-          <option>Preposition</option>
-          <option>Noun</option>
+          <option v-for="category in categories" :key="category.id">{{ category }}</option>
         </select>
         <SelectIcon
           class="absolute top-1/2 right-[20px] transform -translate-y-1/2 pointer-events-none"
