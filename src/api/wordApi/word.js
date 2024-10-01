@@ -1,9 +1,5 @@
-import { ClientFetch } from "../ClientFetch";
+import { ClientFetch } from '../ClientFetch'
 
-
-
-
-
-export const getCategoryWord =()=>{
-  return  ClientFetch.get('/words/categories')
+export const getCategoryWord = () => {
+  return ClientFetch.get('/words/categories')
 }

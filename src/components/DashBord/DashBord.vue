@@ -5,16 +5,26 @@ import PlusIcon from '../icons/PlusIcon.vue'
 import SearchIcon from '../icons/SearchIcon.vue'
 import SelectIcon from '../icons/SelectIcon.vue'
 import { useStore } from 'vuex'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+
+onMounted(() => {
+  store.dispatch('loadCategory')
+})
 
 const store = useStore()
 
 const openAddWordModal = () => store.commit('openAddWordModal')
 const categories = computed(() => store.getters.getCategoryList)
 
-onMounted(() => {
-  store.dispatch('loadCategory')
-})
+const selectCategory = ref('noun')
+const handleCategoryChange = (e) => {
+  selectCategory.value = e.target.value
+}
+
+const selectVerbType = ref('')
+const handleVerbTypeChange  = (e) => {
+  selectVerbType.value = e.target.value
+}
 </script>
 
 <template>
@@ -31,14 +41,45 @@ onMounted(() => {
 
       <div class="relative w-[164px] ml-[8px]">
         <select
-          name=""
+          @change="handleCategoryChange"
+          :value="selectCategory"
           class="appearance-none border-[1px] pt-[12px] pb-[12px] pl-[24px] pr-[50px] rounded-2xl border-opacity-10 border-black placeholder:text-black w-full"
         >
-          <option v-for="category in categories" :key="category.id">{{ category }}</option>
+          <option v-for="category in categories" :key="category.id" :value="category">{{ category }}</option>
         </select>
         <SelectIcon
           class="absolute top-1/2 right-[20px] transform -translate-y-1/2 pointer-events-none"
         />
+      </div>
+
+      <div v-if="selectCategory === 'verb'" class="flex items-center ml-2">
+        <label
+          class="custom-radio"
+          :class="{ 'radio-checked': selectVerbType === 'regular' }"
+        >
+          <input
+            type="radio"
+            name="verbType"
+            value="regular"
+            @change="handleVerbTypeChange"
+            :checked="selectVerbType === 'regular'"
+          />
+          Regular
+        </label>
+        
+        <label
+          class="custom-radio ml-4"
+          :class="{ 'radio-checked': selectVerbType === 'irregular' }"
+        >
+          <input
+            type="radio"
+            name="verbType"
+            value="irregular"
+            @change="handleVerbTypeChange"
+            :checked="selectVerbType === 'irregular'"
+          />
+          Irregular
+        </label>
       </div>
     </div>
 
@@ -62,5 +103,53 @@ onMounted(() => {
   .stat {
     margin-top: 28px;
   }
+}
+
+/* Сховуємо стандартну радіо-кнопку */
+.custom-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Стиль кастомної радіо-кнопки */
+.custom-radio {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding-left: 30px; /* Відступ для радіо-кнопки */
+  cursor: pointer;
+}
+
+/* Коло для кастомної радіо-кнопки */
+.custom-radio::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid gray;
+  border-radius: 50%;
+  transition: border-color 0.3s ease;
+}
+
+/* Коли радіо-кнопка вибрана */
+.radio-checked::before {
+  border-color: #85AA9F; /* Зелений колір при виборі */
+}
+
+/* Стиль для заповненого кола при виборі */
+.radio-checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #85AA9F; /* Колір всередині вибраної кнопки */
+  border-radius: 50%;
 }
 </style>
