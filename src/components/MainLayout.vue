@@ -1,5 +1,11 @@
+<script setup>
+import HeaderComponent from './Header/HeaderComponent.vue'
+</script>
+
 <template>
   <main class="layout h-full ml-[100px] mr-[100px]">
+    <HeaderComponent />
+
     <slot></slot>
   </main>
 </template>

@@ -12,7 +12,7 @@ const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <div class="layout mr-[100px] ml-[100px]">
+  
     <header class="flex items-center justify-between w-full max-w-[1280px] mt-[20px] mb-[20px]">
       <LogoIcon />
       <!-- Навігація для десктопу, схована на планшетах -->
@@ -99,7 +99,7 @@ const isMenuOpen = ref(false)
       </transition>
     </header>
     <router-view></router-view>
-  </div>
+
 </template>
 
 <style scoped>

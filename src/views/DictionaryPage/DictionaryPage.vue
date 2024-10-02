@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import DashBord from '@/components/DashBord/DashBord.vue';
 </script>
 

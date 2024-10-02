@@ -1,11 +1,9 @@
 <script setup>
-import AddWordModal from './components/AddWordModal/AddWordModal.vue';
-import HeaderComponent from './components/Header/HeaderComponent.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <HeaderComponent/>
-  <AddWordModal />
+  <router-view></router-view>
 </template>
 
-<style scoped></style>
+

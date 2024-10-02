@@ -16,7 +16,10 @@ export default {
       medium: '14px'
     },
     fontWeight: {
-      standart: 500
+      regular:400,
+      standart: 500,
+      semibold: 600,
+
     }
   },
   plugins: []
