@@ -1,5 +1,5 @@
-import { createStore } from 'vuex'
 import { getCategoryWord } from '@/api/wordApi/word'
+import { createStore } from 'vuex'
 
 const store = createStore({
   state() {
@@ -12,9 +12,10 @@ const store = createStore({
     async loadCategory({ commit }) {
       try {
         const response = await getCategoryWord()
-        commit('setCategory', response.data)
+
+        commit('setCategory', response)
       } catch (error) {
-        console.error(error)
+        console.error('Error loading category:', error.response ? error.response.data : error)
       }
     }
   },

@@ -1,14 +1,22 @@
 <script setup>
+import { registration } from '@/api/auth'
 import RegistrationComponent from '@/components/Auth/Register/RegistrationComponent.vue'
-// import { useMutations } from '@/composables/useMutation';
-// import {  useRouter } from 'vue-router';
+import { useMutations } from '@/composables/useMutation'
+import { useRouter } from 'vue-router'
 
-// const router = useRouter()
+const router = useRouter()
 
-// const {mutation,isLoading,error}=useMutations({})
+const {
+  mutation: handleRegisterUser,
 
+  error
+} = useMutations({
+  mutationFn: (data) => registration(data),
+  onSuccess: () => router.replace('/dictionary')
+})
 </script>
 
 <template>
-  <RegistrationComponent @submit="console.log" />
+  <RegistrationComponent @submit="handleRegisterUser" />
+  <div v-if="error" class="text-red-500">{{ error.message }}</div>
 </template>
