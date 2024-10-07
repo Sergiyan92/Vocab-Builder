@@ -12,7 +12,53 @@ const userData = reactive({
   password: ''
 })
 
+const errors = reactive({
+  name: '',
+  email: '',
+  password: ''
+})
+
 const showPassword = ref(false)
+
+const validateName = () => {
+  if (userData.name.trim() === '') {
+    errors.name = 'Name is required.'
+  } else {
+    errors.name = ''
+  }
+}
+
+const validateEmail = () => {
+  const emailPatern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+  if (userData.email.trim() === '') {
+    errors.email = 'Email is required.'
+  } else if (!emailPatern.test(userData.email)) {
+    errors.email = 'Invalid email format.'
+  } else {
+    errors.email = ''
+  }
+}
+
+const validatePassword = () => {
+  const passwordPatern = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/
+  if (userData.password.trim() === '') {
+    errors.password = 'Password is required.'
+  } else if (!passwordPatern.test(userData.password)) {
+    errors.password = 'Password must contain at least 6 letters and 1 digit.'
+  } else {
+    errors.password = ''
+  }
+}
+
+const handleSubmit = () => {
+  validateEmail()
+  validateName()
+  validatePassword()
+
+  if (!errors.name && !errors.password && !errors.email) {
+    emit('submit', toRaw(userData))
+  }
+}
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
@@ -21,7 +67,7 @@ const togglePassword = () => {
 
 <template>
   <form
-    @submit.prevent="emit('submit', toRaw(userData))"
+    @submit.prevent="handleSubmit"
     class="w-[628px] bg-green bg-opacity-10 pt-[48px] pl-[64px] pr-[64px] pb-[48px] rounded-[30px] mt-[114px]"
   >
     <h1 class="text-black text-h1 font-semibold">Register</h1>
@@ -49,7 +95,7 @@ const togglePassword = () => {
         class="bg-green bg-opacity-10 w-full rounded-[15px] pl-[18px] pt-[16px] pb-[16px]"
       />
       <component
-        :is="showPassword ? EyeIcon : EyeOff"
+        :is="showPassword ? EyeOff : EyeIcon"
         @click="togglePassword"
         class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
       />
