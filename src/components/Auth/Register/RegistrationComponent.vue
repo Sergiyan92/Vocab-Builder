@@ -1,5 +1,7 @@
 <script setup>
-import { reactive, toRaw } from 'vue'
+import EyeIcon from '@/components/icons/EyeIcon.vue'
+import EyeOff from '@/components/icons/EyeOff.vue'
+import { reactive, ref, toRaw } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const emit = defineEmits(['submit'])
@@ -9,6 +11,12 @@ const userData = reactive({
   email: '',
   password: ''
 })
+
+const showPassword = ref(false)
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
 </script>
 
 <template>
@@ -28,17 +36,25 @@ const userData = reactive({
       class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]"
     />
     <input
-      type="text"
+      type="email"
       v-model="userData.email"
       placeholder="Email"
       class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]"
     />
-    <input
-      type="text"
-      v-model="userData.password"
-      placeholder="Password"
-      class="bg-green bg-opacity-10 w-full rounded-[15px] pl-[18px] pt-[16px] pb-[16px]"
-    />
+    <div class="relative">
+      <input
+        :type="showPassword ? 'text' : 'password'"
+        v-model="userData.password"
+        placeholder="Password"
+        class="bg-green bg-opacity-10 w-full rounded-[15px] pl-[18px] pt-[16px] pb-[16px]"
+      />
+      <component
+        :is="showPassword ? EyeIcon : EyeOff"
+        @click="togglePassword"
+        class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+      />
+    </div>
+
     <button type="submit" class="w-full rounded-[30px] bg-green text-main pt-4 pb-4 mt-8">
       Register
     </button>

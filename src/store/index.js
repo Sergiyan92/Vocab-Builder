@@ -1,6 +1,6 @@
-import { current, login, logout, registration } from '@/api/auth'
-import { getCategoryWord } from '@/api/wordApi/word'
-import { router } from '@/router'
+import { current, login, logout, registration } from '../api/auth'
+import { getCategoryWord } from '../api/wordApi/word'
+import { router } from '../router'
 import { createStore } from 'vuex'
 
 const store = createStore({
