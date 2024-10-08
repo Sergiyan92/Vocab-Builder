@@ -4,6 +4,9 @@ import { RouterLink } from 'vue-router'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOff from '@/components/icons/EyeOff.vue'
 import ErrorIcon from '@/components/icons/ErrorIcon.vue'
+import { useNotification } from "@kyvg/vue3-notification";
+
+const notification = useNotification()
 
 const emit = defineEmits(['submit'])
 
@@ -23,8 +26,18 @@ const validateEmail = () => {
   const emailPatern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
   if (userData.email.trim() === '') {
     errors.email = 'Email is required.'
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Email is required.',
+      type: 'error'
+    })
   } else if (!emailPatern.test(userData.email)) {
     errors.email = 'Invalid email format.'
+    notification.notify({
+      title: 'Validation Error',
+      text:'Invalid email format.',
+      type:'error'
+    })
   } else {
     errors.email = ''
   }
@@ -34,8 +47,18 @@ const validatePassword = () => {
   const paternPassword = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/
   if (userData.password.trim() === '') {
     errors.password = 'Password is required'
+    notification.notify({
+      title: 'Validation Error',
+      text:'Password is required',
+      type:'error'
+    })
   } else if (!paternPassword.test(userData.password)) {
     errors.password = 'Password must contain at least 6 letters and 1 digit.'
+    notification.notify({
+      title: 'Validation Error',
+      text:'Password must contain at least 6 letters and 1 digit.',
+      type:'error'
+    })
   } else {
     errors.password = ''
   }

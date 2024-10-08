@@ -1,3 +1,4 @@
+import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
 import { getCategoryWord } from '../api/wordApi/word'
 import { router } from '../router'
@@ -21,6 +22,7 @@ const store = createStore({
       }
     },
     async loginUser({ commit }, data) {
+      const notification = useNotification()
       try {
         const res = await login(data)
         const { token } = res.data
@@ -28,10 +30,17 @@ const store = createStore({
         router.replace('/dictionary')
         commit('getLogin', res.data)
       } catch (error) {
-        console.log(error)
+        console.error('Error during login:', error.response ? error.response.data : error)
+        const errorMessage = error.response?.data?.message || 'Login failed. Please try again.'
+        notification.notify({
+          title: 'Error login',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async registerUser({ commit }, data) {
+      const notification = useNotification()
       try {
         const res = await registration(data)
         const { token } = res.data
@@ -39,7 +48,14 @@ const store = createStore({
         router.replace('/dictionary')
         commit('getRegister', res.data)
       } catch (error) {
-        console.log(error)
+        console.error('Error during registration:', error.response ? error.response.data : error)
+        const errorMessage =
+          error.response?.data?.message || 'Registration failed. Please try again.'
+        notification.notify({
+          title: 'Error registration',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async currentUser({ commit }) {

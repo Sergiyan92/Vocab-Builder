@@ -2,10 +2,13 @@
 import ErrorIcon from '@/components/icons/ErrorIcon.vue'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOff from '@/components/icons/EyeOff.vue'
+import { useNotification } from '@kyvg/vue3-notification'
 import { computed, reactive, ref, toRaw } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const emit = defineEmits(['submit'])
+
+const notification = useNotification()
 
 const userData = reactive({
   name: '',
@@ -20,38 +23,63 @@ const errors = reactive({
 })
 
 const showPassword = ref(false)
-const passwordSuccess = ref(false);
+const passwordSuccess = ref(false)
 
 const validateName = () => {
   if (userData.name.trim() === '') {
     errors.name = 'Name is required.'
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Name is required.',
+      type: 'error'
+    })
   } else {
     errors.name = ''
   }
 }
 
 const validateEmail = () => {
-  const emailPatern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+  const emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
   if (userData.email.trim() === '') {
     errors.email = 'Email is required.'
-  } else if (!emailPatern.test(userData.email)) {
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Email is required.',
+      type: 'error'
+    })
+  } else if (!emailPattern.test(userData.email)) {
     errors.email = 'Invalid email format.'
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Invalid email format.',
+      type: 'error'
+    })
   } else {
     errors.email = ''
   }
 }
 
 const validatePassword = () => {
-  const passwordPatern = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/
+  const passwordPattern = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/
   if (userData.password.trim() === '') {
     errors.password = 'Password is required.'
-    passwordSuccess.value = false;
-  } else if (!passwordPatern.test(userData.password)) {
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Password is required.',
+      type: 'error'
+    })
+    passwordSuccess.value = false
+  } else if (!passwordPattern.test(userData.password)) {
     errors.password = 'Password must contain at least 6 letters and 1 digit.'
-    passwordSuccess.value = false;
+    notification.notify({
+      title: 'Validation Error',
+      text: 'Password must contain at least 6 letters and 1 digit.',
+      type: 'error'
+    })
+    passwordSuccess.value = false
   } else {
-    errors.password = '',
-    passwordSuccess.value = true;
+    errors.password = ''
+    passwordSuccess.value = true
   }
 }
 
@@ -68,7 +96,14 @@ const handleSubmit = () => {
   validatePassword()
 
   if (!errors.name && !errors.password && !errors.email) {
+    // Відправляємо дані на сервер
     emit('submit', toRaw(userData))
+    // Імітація помилки від сервера
+    notification.notify({
+      title: 'Error',
+      text: 'Server returned an error.',
+      type: 'error'
+    })
   }
 }
 
@@ -87,6 +122,7 @@ const togglePassword = () => {
       To start using our services, please fill out the registration form below. All fields are
       mandatory:
     </p>
+
     <input
       type="text"
       @blur="validateName"
@@ -94,9 +130,10 @@ const togglePassword = () => {
       placeholder="Name"
       class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]"
     />
-    <span v-if="errors.name" class="text-red flex items-center"
-      >{{ errors.name }} <ErrorIcon
-    /></span>
+    <span v-if="errors.name" class="text-red flex items-center">
+      {{ errors.name }} <ErrorIcon />
+    </span>
+
     <input
       type="email"
       @blur="validateEmail"
@@ -104,9 +141,10 @@ const togglePassword = () => {
       placeholder="Email"
       class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]"
     />
-    <span v-if="errors.email" class="flex items-center text-red"
-      >{{ errors.email }}<ErrorIcon
-    /></span>
+    <span v-if="errors.email" class="flex items-center text-red">
+      {{ errors.email }}<ErrorIcon />
+    </span>
+
     <div class="relative">
       <input
         :type="showPassword ? 'text' : 'password'"
@@ -124,23 +162,27 @@ const togglePassword = () => {
         class="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
       />
     </div>
-    <span v-if="errors.password" class="flex items-center text-red mt-4"
-      >{{ errors.password }}<ErrorIcon
-    /></span>
-    <span v-if="passwordSuccess" class=" text-success">Success password</span>
+    <span v-if="errors.password" class="flex items-center text-red mt-4">
+      {{ errors.password }}<ErrorIcon />
+    </span>
+    <span v-if="passwordSuccess" class="text-success">Success password</span>
+
     <button type="submit" class="w-full rounded-[30px] bg-green text-main pt-4 pb-4 mt-8">
       Register
     </button>
+
     <router-link
       to="/auth/login"
       class="flex justify-center underline text-black text-opacity-50 mt-4"
-      >Login</router-link
     >
+      Login
+    </router-link>
   </form>
 </template>
+
 <style scoped>
 .border {
-  border: none
+  border: none;
 }
 .border-red-500 {
   border: 2px solid red;
