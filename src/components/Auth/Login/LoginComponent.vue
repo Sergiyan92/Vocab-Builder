@@ -1,10 +1,10 @@
 <script setup>
-import { reactive, ref, toRaw } from 'vue'
+import { computed, reactive, ref, toRaw } from 'vue'
 import { RouterLink } from 'vue-router'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOff from '@/components/icons/EyeOff.vue'
 import ErrorIcon from '@/components/icons/ErrorIcon.vue'
-import { useNotification } from "@kyvg/vue3-notification";
+import { useNotification } from '@kyvg/vue3-notification'
 
 const notification = useNotification()
 
@@ -35,8 +35,8 @@ const validateEmail = () => {
     errors.email = 'Invalid email format.'
     notification.notify({
       title: 'Validation Error',
-      text:'Invalid email format.',
-      type:'error'
+      text: 'Invalid email format.',
+      type: 'error'
     })
   } else {
     errors.email = ''
@@ -49,20 +49,30 @@ const validatePassword = () => {
     errors.password = 'Password is required'
     notification.notify({
       title: 'Validation Error',
-      text:'Password is required',
-      type:'error'
+      text: 'Password is required',
+      type: 'error'
     })
   } else if (!paternPassword.test(userData.password)) {
     errors.password = 'Password must contain at least 6 letters and 1 digit.'
     notification.notify({
       title: 'Validation Error',
-      text:'Password must contain at least 6 letters and 1 digit.',
-      type:'error'
+      text: 'Password must contain at least 6 letters and 1 digit.',
+      type: 'error'
     })
   } else {
     errors.password = ''
   }
 }
+
+const getBorderColor = (field, errField) => {
+  if (!field) {
+    return 'border'
+  }
+  return errField ? 'border-red-500' : 'border-green-500'
+}
+
+const emailBorderColor = computed(() => getBorderColor(userData.email, errors.email))
+const passwordBorderColor = computed(() => getBorderColor(userData.password, errors.password))
 
 const handleSubmit = () => {
   validateEmail()
@@ -92,7 +102,10 @@ const togglePassword = () => {
       @blur="validateEmail"
       v-model="userData.email"
       placeholder="Email"
-      class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]"
+      :class="[
+        'bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]',
+        emailBorderColor
+      ]"
     />
     <span v-if="errors.email" class="text-red flex items-center"
       >{{ errors.email }}<ErrorIcon class="ml-2"
@@ -103,7 +116,10 @@ const togglePassword = () => {
         @blur="validatePassword"
         v-model="userData.password"
         placeholder="Password"
-        class="bg-green bg-opacity-10 w-full rounded-[15px] pl-[18px] pt-[16px] pb-[16px]"
+        :class="[
+          'bg-green bg-opacity-10 w-full rounded-[15px] pl-[18px] pt-[16px] pb-[16px]',
+          passwordBorderColor
+        ]"
       />
       <component
         :is="showPassword ? EyeOff : EyeIcon"
@@ -124,3 +140,17 @@ const togglePassword = () => {
     >
   </form>
 </template>
+<style scoped>
+.border {
+  border: none;
+}
+.border:hover {
+  border: 1px solid#85aa9f;
+}
+.border-red-500 {
+  border: 1px solid #ff0000;
+}
+.border-green-500 {
+  border: 1px solid #008000;
+}
+</style>

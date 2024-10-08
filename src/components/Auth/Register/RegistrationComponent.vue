@@ -83,12 +83,16 @@ const validatePassword = () => {
   }
 }
 
-const passwordBorderColor = computed(() => {
-  if (!userData.password) {
+const getBorderColor = (field,errField) => {
+  if (!field) {
     return 'border'
   }
-  return errors.password ? 'border-red-500' : 'border-green-500'
-})
+  return errField ? 'border-red-500' : 'border-green-500'
+}
+
+const passwordBorderColor=computed(()=>getBorderColor(userData.password, errors.password))
+const emailBorderColor=computed(()=>getBorderColor(userData.email,errors.email))
+const nameBorderColor=computed(()=>getBorderColor(userData.name,errors.name))
 
 const handleSubmit = () => {
   validateEmail()
@@ -96,14 +100,7 @@ const handleSubmit = () => {
   validatePassword()
 
   if (!errors.name && !errors.password && !errors.email) {
-    // Відправляємо дані на сервер
     emit('submit', toRaw(userData))
-    // Імітація помилки від сервера
-    notification.notify({
-      title: 'Error',
-      text: 'Server returned an error.',
-      type: 'error'
-    })
   }
 }
 
@@ -128,7 +125,7 @@ const togglePassword = () => {
       @blur="validateName"
       v-model="userData.name"
       placeholder="Name"
-      class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]"
+      :class="['bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]',nameBorderColor]"
     />
     <span v-if="errors.name" class="text-red flex items-center">
       {{ errors.name }} <ErrorIcon />
@@ -139,7 +136,7 @@ const togglePassword = () => {
       @blur="validateEmail"
       v-model="userData.email"
       placeholder="Email"
-      class="bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]"
+      :class="['bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]',emailBorderColor]"
     />
     <span v-if="errors.email" class="flex items-center text-red">
       {{ errors.email }}<ErrorIcon />
@@ -184,10 +181,13 @@ const togglePassword = () => {
 .border {
   border: none;
 }
+.border:hover{
+  border: 1px solid #85aa9f;
+}
 .border-red-500 {
-  border: 2px solid red;
+  border: 1px solid red;
 }
 .border-green-500 {
-  border: 2px solid #008000;
+  border: 1px solid #008000;
 }
 </style>
