@@ -53,7 +53,7 @@ const handleVerbTypeChange = (e) => {
             </option>
           </select>
           <SelectIcon
-            class="absolute top-1/2 right-[20px] transform -translate-y-1/2 pointer-events-none"
+            class="absolute top-1/2 right-[20px] transform -translate-y-1/2 pointer-events-none fill-black"
           />
         </div>
 
