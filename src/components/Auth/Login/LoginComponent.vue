@@ -91,10 +91,10 @@ const togglePassword = () => {
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="w-[628px] bg-green bg-opacity-10 pt-[48px] pl-[64px] pr-[64px] pb-[48px] rounded-[30px] mt-[114px]"
+    class="form w-[628px] bg-green bg-opacity-10 pt-[48px] pl-[64px] pr-[64px] pb-[48px] rounded-[30px] mt-[114px]"
   >
-    <h1 class="text-black text-h1 font-semibold">Login</h1>
-    <p class="text-black text-opacity-80 text-h2 font-regular">
+    <h1 class="title text-black text-h1 font-semibold">Login</h1>
+    <p class="text-black text-opacity-80 text-h2 font-regular descr">
       Please enter your login details to continue using our service:
     </p>
     <input
@@ -141,6 +141,19 @@ const togglePassword = () => {
   </form>
 </template>
 <style scoped>
+@media (max-width: 767px) {
+  .form {
+    padding: 0;
+  }
+  .title {
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .descr {
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
 .border {
   border: none;
 }

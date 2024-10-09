@@ -8,9 +8,24 @@ import BaseLayout from '@/components/BaseLayout.vue'
   <BaseLayout>
     <section class="mt-6">
       <LogoIcon />
-      <div class="flex">
+      <div class="flex justify-center">
         <router-view></router-view>
-        <img src="../../assets/img/image.png" class="w-[498px] h-[475px] mt-[103px] ml-[80px]" />
+        <img
+          src="../../assets/img/image.png"
+          class="w-[498px] h-[475px] mt-[103px] ml-[80px] image"
+        />
       </div></section
   ></BaseLayout>
 </template>
+<style scoped>
+@media (max-width: 768px) {
+  .image {
+    display: block;
+  }
+}
+@media (max-width: 1024px) {
+  .image {
+    display: none;
+  }
+}
+</style>

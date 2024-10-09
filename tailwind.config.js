@@ -14,6 +14,7 @@ export default {
     },
     fontSize: {
       h1: '40px',
+      
       h2: '20px',
       medium: '14px'
     },

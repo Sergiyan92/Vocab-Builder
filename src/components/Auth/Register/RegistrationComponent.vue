@@ -83,16 +83,16 @@ const validatePassword = () => {
   }
 }
 
-const getBorderColor = (field,errField) => {
+const getBorderColor = (field, errField) => {
   if (!field) {
     return 'border'
   }
   return errField ? 'border-red-500' : 'border-green-500'
 }
 
-const passwordBorderColor=computed(()=>getBorderColor(userData.password, errors.password))
-const emailBorderColor=computed(()=>getBorderColor(userData.email,errors.email))
-const nameBorderColor=computed(()=>getBorderColor(userData.name,errors.name))
+const passwordBorderColor = computed(() => getBorderColor(userData.password, errors.password))
+const emailBorderColor = computed(() => getBorderColor(userData.email, errors.email))
+const nameBorderColor = computed(() => getBorderColor(userData.name, errors.name))
 
 const handleSubmit = () => {
   validateEmail()
@@ -112,10 +112,10 @@ const togglePassword = () => {
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="w-[628px] bg-green bg-opacity-10 pt-[48px] pl-[64px] pr-[64px] pb-[48px] rounded-[30px] mt-[114px]"
+    class="form w-[628px] bg-green bg-opacity-10 pt-[48px] pl-[64px] pr-[64px] pb-[48px] rounded-[30px] mt-[114px]"
   >
-    <h1 class="text-black text-h1 font-semibold">Register</h1>
-    <p class="text-black text-opacity-80 text-h2 font-regular">
+    <h1 class="title text-black text-h1 font-semibold">Register</h1>
+    <p class="descr text-black text-opacity-80 text-h2 font-regular">
       To start using our services, please fill out the registration form below. All fields are
       mandatory:
     </p>
@@ -125,7 +125,10 @@ const togglePassword = () => {
       @blur="validateName"
       v-model="userData.name"
       placeholder="Name"
-      :class="['bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]',nameBorderColor]"
+      :class="[
+        'bg-green bg-opacity-10 w-full rounded-[15px] mb-5 mt-8 pl-[18px] pt-[16px] pb-[16px]',
+        nameBorderColor
+      ]"
     />
     <span v-if="errors.name" class="text-red flex items-center">
       {{ errors.name }} <ErrorIcon />
@@ -136,7 +139,10 @@ const togglePassword = () => {
       @blur="validateEmail"
       v-model="userData.email"
       placeholder="Email"
-      :class="['bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]',emailBorderColor]"
+      :class="[
+        'bg-green bg-opacity-10 w-full rounded-[15px] mb-5 pl-[18px] pt-[16px] pb-[16px]',
+        emailBorderColor
+      ]"
     />
     <span v-if="errors.email" class="flex items-center text-red">
       {{ errors.email }}<ErrorIcon />
@@ -178,10 +184,23 @@ const togglePassword = () => {
 </template>
 
 <style scoped>
+@media (max-width: 767px) {
+  .form {
+    padding: 0;
+  }
+  .title {
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .descr {
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
 .border {
   border: none;
 }
-.border:hover{
+.border:hover {
   border: 1px solid #85aa9f;
 }
 .border-red-500 {
