@@ -6,7 +6,6 @@ import SearchIcon from '../icons/SearchIcon.vue'
 import SelectIcon from '../icons/SelectIcon.vue'
 import { useStore } from 'vuex'
 import { computed, onMounted, ref } from 'vue'
-import MainLayout from '../MainLayout.vue'
 import AddWordModal from '../AddWordModal/AddWordModal.vue'
 
 onMounted(() => {
@@ -31,7 +30,7 @@ const handleVerbTypeChange = (e) => {
 </script>
 
 <template>
-  <MainLayout>
+  
     <section class="flex dashboard justify-between items-center mt-[80px]">
       <div class="flex">
         <div class="relative">
@@ -97,7 +96,7 @@ const handleVerbTypeChange = (e) => {
       </div></section
   >
   <AddWordModal @submit="handleAddWord" />
-  </MainLayout>
+
 </template>
 
 <style scoped>

@@ -1,3 +1,0 @@
-<template>
-    gj
-</template>

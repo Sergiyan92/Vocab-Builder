@@ -1,6 +1,6 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
-import { addWord, getCategoryWord } from '../api/wordApi/word'
+import { addWord, getAllWords, getCategoryWord } from '../api/wordApi/word'
 import { router } from '../router'
 import { createStore } from 'vuex'
 
@@ -8,6 +8,7 @@ const store = createStore({
   state() {
     return {
       category: [],
+      words: [],
       showAddWordModal: false,
       user: ''
     }
@@ -76,6 +77,15 @@ const store = createStore({
         console.log(error)
       }
     },
+    async getAllWords({ commit }) {
+      try {
+        const res = await getAllWords()
+        console.log(res.data.results)
+        commit('allWords', res.data.results)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async addWord({ commit }, data) {
       try {
         const res = await addWord(data)
@@ -96,6 +106,9 @@ const store = createStore({
     setCategory(state, category) {
       state.category = category
     },
+    allWords(state, wordsData) {
+      state.words = wordsData
+    },
     getRegister(state, registerData) {
       state.user = registerData.user
     },
@@ -113,6 +126,7 @@ const store = createStore({
   getters: {
     getUser: (state) => state.user,
     getCategoryList: (state) => state.category,
+    getWordsList: (state) => state.words,
     isAddWordModalOpen: (state) => state.showAddWordModal
   }
 })
