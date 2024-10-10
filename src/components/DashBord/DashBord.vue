@@ -17,10 +17,11 @@ const store = useStore()
 
 const openAddWordModal = () => store.commit('openAddWordModal')
 const categories = computed(() => store.getters.getCategoryList)
-
+const handleAddWord=data=>store.dispatch('addWord',data)
 const selectCategory = ref('noun')
 const handleCategoryChange = (e) => {
   selectCategory.value = e.target.value
+
 }
 
 const selectVerbType = ref('')
@@ -95,7 +96,7 @@ const handleVerbTypeChange = (e) => {
         </router-link>
       </div></section
   >
-  <AddWordModal />
+  <AddWordModal @submit="handleAddWord" />
   </MainLayout>
 </template>
 

@@ -21,3 +21,6 @@ export const getCategoryWord = () => {
       )
     })
 }
+export const addWord=(data)=>{
+  return ClientFetch.post('/words/create',data)
+}

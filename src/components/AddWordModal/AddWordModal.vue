@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref, toRaw } from 'vue'
 import UkraineIcon from '../icons/UkraineIcon.vue'
 import UKIcon from '../icons/UKIcon.vue'
 import CloseIcon from '../icons/CloseIcon.vue'
@@ -7,22 +7,38 @@ import { useStore } from 'vuex'
 import SelectIcon from '../icons/SelectIcon.vue'
 
 const store = useStore()
+const emit = defineEmits(['submit'])
 const categories = computed(() => store.getters.getCategoryList)
 
 onMounted(() => {
   store.dispatch('loadCategory')
 })
 
+const wordData = reactive({
+  en: '',
+  ua: '',
+  category: 'noun'
+})
+
 const selectCategory = ref('noun')
-const selectVerbType = ref('')
+const selectVerbType = ref('regular')
 
 const handleCategoryChange = (e) => {
   selectCategory.value = e.target.value
+  wordData.category = e.target.value
 }
 
 const handleVerbTypeChange = (e) => {
   selectVerbType.value = e.target.value
 }
+
+const handleSubmit = () => {
+  emit('submit', toRaw(wordData))
+  wordData.en = '' // Очистити поле "English word"
+  wordData.ua = '' // Очистити поле "Українське слово"
+  wordData.category = 'noun'
+}
+
 const isModalOpen = computed(() => store.getters.isAddWordModalOpen)
 const closeAddWordModal = () => store.commit('closeAddWordModal')
 </script>
@@ -30,7 +46,10 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
 <template>
   <div v-if="isModalOpen" class="fixed inset-0 flex justify-center items-center z-10">
     <div @click="closeAddWordModal" class="absolute inset-0 bg-black opacity-20"></div>
-    <form class="relative flex-col w-[628px] p-[64px] bg-green rounded-[30px] z-20">
+    <form
+      @submit.prevent="handleSubmit"
+      class="relative flex-col w-[628px] p-[64px] bg-green rounded-[30px] z-20"
+    >
       <CloseIcon
         class="absolute top-[20px] right-[20px] w-[32px] h-[32px] cursor-pointer"
         @click="closeAddWordModal"
@@ -59,7 +78,7 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
           />
         </div>
 
-        <div v-if="selectCategory==='verb'" class="mb-9">
+        <div v-if="selectCategory === 'verb'" class="mb-9">
           <label
             class="mr-4 text-main custom-radio"
             :class="{ 'radio-checked': selectVerbType === 'regular' }"
@@ -90,15 +109,17 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
           <div>
             <input
               type="text"
+              v-model="wordData.ua"
               name="ukraine"
               placeholder="Українське слово"
-              class="border border-main border-opacity-30 bg-green rounded-2xl w-[354px] pl-[18px] pt-4 pb-4 mb-[18px] placeholder:text-main"
+              class="border border-main border-opacity-30 text-main bg-green rounded-2xl w-[354px] pl-[18px] pt-4 pb-4 mb-[18px] placeholder:text-main"
             />
             <input
               type="text"
+              v-model="wordData.en"
               name="english"
               placeholder="English word"
-              class="border border-main border-opacity-30 bg-green rounded-2xl w-[354px] pl-[18px] pt-4 pb-4 placeholder:text-main"
+              class="border border-main border-opacity-30 text-main bg-green rounded-2xl w-[354px] pl-[18px] pt-4 pb-4 placeholder:text-main"
             />
           </div>
           <div class="flex flex-col justify-between pt-[11px] pb-[11px]">
@@ -110,7 +131,7 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
 
       <div class="mt-8 w-full">
         <button
-          type="button"
+          type="submit"
           class="pt-[14px] pb-[14px] pl-[101px] pr-[101px] bg-main rounded-[30px] mr-[10px]"
         >
           Save
@@ -152,14 +173,13 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  border: 2px solid rgb(252, 252, 252,0.3);
+  border: 2px solid rgb(252, 252, 252, 0.3);
   border-radius: 50%;
   transition: border-color 0.3s ease;
 }
 
-
 .radio-checked::before {
-  border-color: #FCFCFC;
+  border-color: #fcfcfc;
 }
 
 /* Стиль для заповненого кола при виборі */
@@ -171,7 +191,7 @@ const closeAddWordModal = () => store.commit('closeAddWordModal')
   transform: translateY(-50%);
   width: 10px;
   height: 10px;
-  background-color: #FCFCFC; /* Колір всередині вибраної кнопки */
+  background-color: #fcfcfc; /* Колір всередині вибраної кнопки */
   border-radius: 50%;
 }
 </style>

@@ -1,6 +1,6 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
-import { getCategoryWord } from '../api/wordApi/word'
+import { addWord, getCategoryWord } from '../api/wordApi/word'
 import { router } from '../router'
 import { createStore } from 'vuex'
 
@@ -72,6 +72,15 @@ const store = createStore({
         router.replace('/auth/login')
         localStorage.removeItem('authToken')
         commit('getLogout')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addWord({ commit }, data) {
+      try {
+        const res = await addWord(data)
+        console.log(res.data)
+        commit('addWord', res.data)
       } catch (error) {
         console.log(error)
       }
