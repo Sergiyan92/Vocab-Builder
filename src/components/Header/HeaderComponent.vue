@@ -16,12 +16,14 @@ onMounted(() => {
   store.dispatch('currentUser')
 })
 
-const userName =computed(()=>store.getters.getUser)
-const logout=()=>store.dispatch('logoutUser')
+const userName = computed(() => store.getters.getUser)
+const logout = () => store.dispatch('logoutUser')
 </script>
 
 <template>
-  <header class="flex items-center justify-between w-full max-w-[1280px] mt-[20px] mb-[20px]">
+  <header
+    class="flex items-center justify-between w-full bg-[#fff] pl-[100px] pr-[100px] max-w-[1480px] pt-[20px] pb-[20px]"
+  >
     <LogoIcon />
     <!-- Навігація для десктопу, схована на планшетах -->
     <nav class="hidden md:flex items-center">

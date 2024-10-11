@@ -13,8 +13,7 @@ export default {
       success: '#008000'
     },
     fontSize: {
-      h1: '40px',
-      
+      h1: '40px',      
       h2: '20px',
       medium: '14px'
     },

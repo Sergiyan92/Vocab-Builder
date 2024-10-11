@@ -31,7 +31,7 @@ const handleVerbTypeChange = (e) => {
 
 <template>
   
-    <section class="flex dashboard justify-between items-center mt-[80px]">
+    <section class="flex dashboard justify-between items-center pt-[80px]">
       <div class="flex">
         <div class="relative">
           <input
