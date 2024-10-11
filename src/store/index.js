@@ -9,6 +9,7 @@ const store = createStore({
     return {
       category: [],
       words: [],
+      totalPages: null,
       showAddWordModal: false,
       user: ''
     }
@@ -77,11 +78,13 @@ const store = createStore({
         console.log(error)
       }
     },
-    async getAllWords({ commit }) {
+    async getAllWords({ commit }, { page }) {
       try {
-        const res = await getAllWords()
-        console.log(res.data.results)
+     
+        const res = await getAllWords({ page })
+        console.log(res.data)
         commit('allWords', res.data.results)
+        commit('setTotalPages', res.data.totalPages)
       } catch (error) {
         console.log(error)
       }
@@ -109,6 +112,9 @@ const store = createStore({
     allWords(state, wordsData) {
       state.words = wordsData
     },
+    setTotalPages(state, totalPages) {
+      state.totalPages = totalPages
+    },
     getRegister(state, registerData) {
       state.user = registerData.user
     },
@@ -127,6 +133,7 @@ const store = createStore({
     getUser: (state) => state.user,
     getCategoryList: (state) => state.category,
     getWordsList: (state) => state.words,
+    getTotalPages: (state) => state.totalPages,
     isAddWordModalOpen: (state) => state.showAddWordModal
   }
 })

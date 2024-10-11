@@ -25,6 +25,6 @@ export const addWord=(data)=>{
   return ClientFetch.post('/words/create',data)
 }
 
-export const getAllWords=()=>{
-  return ClientFetch.get('/words/all')
+export const getAllWords=({page})=>{
+  return ClientFetch.get(`/words/all?page=${page}`)
 }
