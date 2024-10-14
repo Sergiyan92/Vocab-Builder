@@ -11,7 +11,6 @@ export const getCategoryWord = () => {
 
   return ClientFetch.get('/words/categories')
     .then((response) => {
-
       return response.data
     })
     .catch((error) => {
@@ -21,10 +20,13 @@ export const getCategoryWord = () => {
       )
     })
 }
-export const addWord=(data)=>{
-  return ClientFetch.post('/words/create',data)
+export const addWord = (data) => {
+  return ClientFetch.post('/words/create', data)
 }
 
-export const getAllWords=({page})=>{
+export const getAllWords = ({ page }) => {
   return ClientFetch.get(`/words/all?page=${page}`)
+}
+export const getStatistics = () => {
+  return ClientFetch.get('/words/statistics')
 }

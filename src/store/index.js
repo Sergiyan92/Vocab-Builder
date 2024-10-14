@@ -1,6 +1,6 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
-import { addWord, getAllWords, getCategoryWord } from '../api/wordApi/word'
+import { addWord, getAllWords, getCategoryWord, getStatistics } from '../api/wordApi/word'
 import { router } from '../router'
 import { createStore } from 'vuex'
 
@@ -9,6 +9,7 @@ const store = createStore({
     return {
       category: [],
       words: [],
+      statistics: '',
       searchQuery: '', // Значення пошуку
       selectedCategory: 'all', // Поточна вибрана категорія
       selectedVerbType: 'regular', // Тип дієслова (regular/irregular)
@@ -99,6 +100,14 @@ const store = createStore({
       } catch (error) {
         console.log(error)
       }
+    },
+    async getStatistic({ commit }) {
+      try {
+        const res = await getStatistics()
+        commit('getStatistic', res.data.totalCount)
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mutations: {
@@ -123,6 +132,9 @@ const store = createStore({
     setSelectedVerbType: (state, verbType) => {
       state.selectedVerbType = verbType
     },
+    getStatistic(state, statistics) {
+      state.statistics = statistics
+    },
     setTotalPages(state, totalPages) {
       state.totalPages = totalPages
     },
@@ -145,6 +157,7 @@ const store = createStore({
     getCategoryList: (state) => state.category,
     getTotalPages: (state) => state.totalPages,
     isAddWordModalOpen: (state) => state.showAddWordModal,
+    getStatistics: (state) => state.statistics,
     getWordsList: (state) => state.words,
     getFilteredWords: (state) => {
       let filteredWords = state.words

@@ -10,9 +10,12 @@ import AddWordModal from '../AddWordModal/AddWordModal.vue'
 
 onMounted(() => {
   store.dispatch('loadCategory')
+  store.dispatch('getStatistic')
 })
 
 const store = useStore()
+
+const statistics = computed(() => store.getters.getStatistics)
 
 const selectCategory = computed({
   get: () => store.state.selectedCategory,
@@ -25,7 +28,9 @@ const searchQuery = computed({
 })
 
 const openAddWordModal = () => store.commit('openAddWordModal')
+
 const categories = computed(() => store.getters.getCategoryList)
+
 const handleAddWord = (data) => store.dispatch('addWord', data)
 
 const selectVerbType = computed({
@@ -79,7 +84,7 @@ const selectVerbType = computed({
     </div>
 
     <div class="flex stat">
-      <p><span class="text-black opacity-50">To study:</span> 20</p>
+      <p><span class="text-black opacity-50">To study:</span> {{ statistics }}</p>
       <button class="mr-[16px] ml-[16px] items-center flex" @click="openAddWordModal">
         Add word <PlusIcon class="ml-[8px]" />
       </button>
