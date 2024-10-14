@@ -9,7 +9,6 @@ const currentPage = ref(1)
 const perPage = 7
 const totalPages = computed(() => store.getters.getTotalPages) // Отримуємо з Vuex
 
-// Діапазон для пагінації
 const getPagesRange = () => {
   const total = totalPages.value
   const range = []
@@ -32,7 +31,7 @@ const getPagesRange = () => {
 
 // Отримуємо слова при зміні сторінки
 const store = useStore()
-const words = computed(() => store.getters.getWordsList)
+const words = computed(() => store.getters.getFilteredWords)
 
 const fetchWords = (page) => {
   store.dispatch('getAllWords', { page, perPage })

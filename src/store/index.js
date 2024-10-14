@@ -9,6 +9,9 @@ const store = createStore({
     return {
       category: [],
       words: [],
+      searchQuery: '', // Значення пошуку
+      selectedCategory: 'all', // Поточна вибрана категорія
+      selectedVerbType: 'regular', // Тип дієслова (regular/irregular)
       totalPages: null,
       showAddWordModal: false,
       user: ''
@@ -80,7 +83,6 @@ const store = createStore({
     },
     async getAllWords({ commit }, { page }) {
       try {
-     
         const res = await getAllWords({ page })
         console.log(res.data)
         commit('allWords', res.data.results)
@@ -112,6 +114,15 @@ const store = createStore({
     allWords(state, wordsData) {
       state.words = wordsData
     },
+    setSearchQuery(state, query) {
+      state.searchQuery = query
+    },
+    setSelectedCategory(state, category) {
+      state.selectedCategory = category
+    },
+    setSelectedVerbType: (state, verbType) => {
+      state.selectedVerbType = verbType
+    },
     setTotalPages(state, totalPages) {
       state.totalPages = totalPages
     },
@@ -132,9 +143,34 @@ const store = createStore({
   getters: {
     getUser: (state) => state.user,
     getCategoryList: (state) => state.category,
-    getWordsList: (state) => state.words,
     getTotalPages: (state) => state.totalPages,
-    isAddWordModalOpen: (state) => state.showAddWordModal
+    isAddWordModalOpen: (state) => state.showAddWordModal,
+    getWordsList: (state) => state.words,
+    getFilteredWords: (state) => {
+      let filteredWords = state.words
+
+      if (state.searchQuery) {
+        filteredWords = filteredWords.filter((word) =>
+          word.en.toLowerCase().includes(state.searchQuery.toLowerCase())
+        )
+      }
+
+      if (state.selectedCategory && state.selectedCategory !== 'all') {
+        filteredWords = filteredWords.filter((word) => word.category === state.selectedCategory)
+      }
+
+      if (state.selectedCategory === 'verb' && state.selectedVerbType) {
+        filteredWords = filteredWords.filter((word) => {
+          if (state.selectedVerbType === 'regular') {
+            return !word.isIrregular
+          } else if (state.selectedVerbType === 'irregular') {
+            return word.isIrregular
+          }
+        })
+      }
+
+      return filteredWords
+    }
   }
 })
 
