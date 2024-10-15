@@ -17,7 +17,8 @@ onMounted(() => {
 const wordData = reactive({
   en: '',
   ua: '',
-  category: 'noun'
+  category: 'noun',
+  isIrregular: false
 })
 
 const selectCategory = ref('noun')
@@ -30,13 +31,29 @@ const handleCategoryChange = (e) => {
 
 const handleVerbTypeChange = (e) => {
   selectVerbType.value = e.target.value
+  wordData.isIrregular = selectVerbType.value === 'irregular';
 }
 
 const handleSubmit = () => {
-  emit('submit', toRaw(wordData))
-  wordData.en = '' // Очистити поле "English word"
-  wordData.ua = '' // Очистити поле "Українське слово"
+  const dataToSubmit = {
+    en: wordData.en,
+    ua: wordData.ua,
+    category: wordData.category,
+  };
+
+  // Додаємо isIrregular лише для категорії verb
+  if (wordData.category === 'verb') {
+    dataToSubmit.isIrregular = wordData.isIrregular;
+  }
+
+  emit('submit', toRaw(dataToSubmit))
+
+  // Скидаємо поля
+  wordData.en = ''
+  wordData.ua = ''
   wordData.category = 'noun'
+  wordData.isIrregular = false;
+  selectVerbType.value = 'regular';
 }
 
 const isModalOpen = computed(() => store.getters.isAddWordModalOpen)

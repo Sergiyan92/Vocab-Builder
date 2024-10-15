@@ -25,8 +25,11 @@ export const addWord = (data) => {
 }
 
 export const getAllWords = ({ page }) => {
-  return ClientFetch.get(`/words/all?page=${page}`)
+  return ClientFetch.get(`/words/own?page=${page}`)
 }
 export const getStatistics = () => {
   return ClientFetch.get('/words/statistics')
+}
+export const deleteWord = ({ id }) => {
+  return ClientFetch.delete(`/words/delete/${id}`)
 }

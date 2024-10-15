@@ -1,6 +1,12 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
-import { addWord, getAllWords, getCategoryWord, getStatistics } from '../api/wordApi/word'
+import {
+  addWord,
+  deleteWord,
+  getAllWords,
+  getCategoryWord,
+  getStatistics
+} from '../api/wordApi/word'
 import { router } from '../router'
 import { createStore } from 'vuex'
 
@@ -92,11 +98,28 @@ const store = createStore({
         console.log(error)
       }
     },
-    async addWord({ commit }, data) {
+    async addWord({ commit, dispatch }, data) {
       try {
-        const res = await addWord(data)
-        console.log(res.data)
-        commit('addWord', res.data)
+        // Додаємо слово
+        const res = await addWord(data);
+        console.log(res.data);
+    
+        // Комітимо додане слово в state
+        commit('addWord', res.data);
+    
+        // Оновлюємо список слів
+        await dispatch('getAllWords');
+      } catch (error) {
+        // Логування помилок
+        console.error('Error adding word:', error);
+        // Можна додати обробку специфічних помилок або показати повідомлення користувачу
+      }
+    },
+    async deleteWord({ commit, dispatch }, id) {
+      try {
+        await deleteWord({ id })
+        commit('deleteWord', id)
+        dispatch('getAllWords')
       } catch (error) {
         console.log(error)
       }
@@ -122,6 +145,12 @@ const store = createStore({
     },
     allWords(state, wordsData) {
       state.words = wordsData
+    },
+    addWord(state, newWord) {
+      state.words.push(newWord); // Додаємо нове слово до списку слів
+    },
+    deleteWord(state, id) {
+      state.words = state.words.filter((word) => word._id !== id)
     },
     setSearchQuery(state, query) {
       state.searchQuery = query

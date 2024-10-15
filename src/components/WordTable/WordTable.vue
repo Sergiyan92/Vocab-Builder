@@ -3,7 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import UKIcon from '../icons/UKIcon.vue'
 import UkraineIcon from '../icons/UkraineIcon.vue'
-
+import DeleteIcon from '../icons/DeleteIcon.vue'
+import EditIcon from '../icons/EditIcon.vue'
 // Параметри для пагінації
 const currentPage = ref(1)
 const perPage = 7
@@ -67,6 +68,20 @@ const goToPreviousPage = () => {
     fetchWords(currentPage.value)
   }
 }
+
+const isActionMenuOpen = ref({})
+const toggleActionMenu = (id) => {
+  isActionMenuOpen.value[id] = !isActionMenuOpen.value[id]
+}
+
+const deleteWord = (id) => {
+  console.log('Deleting word with id:', id);
+  if (id) {
+    store.dispatch('deleteWord', id)
+  } else {
+    console.error('Word ID is undefined')
+  }
+}
 </script>
 
 <template>
@@ -109,7 +124,26 @@ const goToPreviousPage = () => {
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.ua }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.category }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">Progress</td>
-          <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]"></td>
+          <td class="text-h2 text-center pt-[22px] pl-[22px] pb-[22px]">
+            <button type="button" @click="toggleActionMenu(word._id)">...</button>
+            <div v-if="isActionMenuOpen[word._id]">
+              <div class="w-[124px] h-[80px] flex flex-col bg-main absolute pt-3 pb-3 pl-6 pr-6">
+                <button
+                  type="button"
+                  class="flex items-center text-black font-standart text-[16px] mb-2"
+                  @click="deleteWord(word._id)"
+                >
+                  <DeleteIcon class="mr-2" /> Delete
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center text-black font-standart text-[16px]"
+                >
+                  <EditIcon class="mr-2" /> Edit
+                </button>
+              </div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
