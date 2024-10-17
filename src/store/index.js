@@ -3,6 +3,7 @@ import { current, login, logout, registration } from '../api/auth'
 import {
   addWord,
   deleteWord,
+  editWord,
   getAllWords,
   getCategoryWord,
   getStatistics
@@ -21,6 +22,7 @@ const store = createStore({
       selectedVerbType: 'regular', // Тип дієслова (regular/irregular)
       totalPages: null,
       showAddWordModal: false,
+      showEditWordModal: false,
       user: ''
     }
   },
@@ -101,18 +103,30 @@ const store = createStore({
     async addWord({ commit, dispatch }, data) {
       try {
         // Додаємо слово
-        const res = await addWord(data);
-        console.log(res.data);
-    
+        const res = await addWord(data)
+        console.log(res.data)
+
         // Комітимо додане слово в state
-        commit('addWord', res.data);
-    
+        commit('addWord', res.data)
+
         // Оновлюємо список слів
-        await dispatch('getAllWords');
+        await dispatch('getAllWords')
       } catch (error) {
         // Логування помилок
-        console.error('Error adding word:', error);
+        console.error('Error adding word:', error)
         // Можна додати обробку специфічних помилок або показати повідомлення користувачу
+      }
+    },
+    async editWord({ commit, dispatch }, data, id) {
+      console.log('data to edit', data)
+      console.log('id to edit', id)
+      try {
+        const res = await editWord(data, id)
+        console.log(res.data)
+        commit('editWord', res.data)
+        await dispatch('getAllWords')
+      } catch (error) {
+        console.log(error)
       }
     },
     async deleteWord({ commit, dispatch }, id) {
@@ -140,6 +154,12 @@ const store = createStore({
     closeAddWordModal(state) {
       state.showAddWordModal = false
     },
+    openEditModal(state) {
+      state.showEditWordModal = true
+    },
+    closeEditModal(state){
+      state.showEditWordModal=false
+    },
     setCategory(state, category) {
       state.category = category
     },
@@ -147,7 +167,10 @@ const store = createStore({
       state.words = wordsData
     },
     addWord(state, newWord) {
-      state.words.push(newWord); // Додаємо нове слово до списку слів
+      state.words.push(newWord) // Додаємо нове слово до списку слів
+    },
+    editWord(state, editWord) {
+      state.words.push(editWord)
     },
     deleteWord(state, id) {
       state.words = state.words.filter((word) => word._id !== id)
@@ -186,6 +209,7 @@ const store = createStore({
     getCategoryList: (state) => state.category,
     getTotalPages: (state) => state.totalPages,
     isAddWordModalOpen: (state) => state.showAddWordModal,
+    isEditModalOpen: (state) => state.showEditWordModal,
     getStatistics: (state) => state.statistics,
     getWordsList: (state) => state.words,
     getFilteredWords: (state) => {

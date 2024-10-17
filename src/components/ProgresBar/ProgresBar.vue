@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+ defineProps({
   progress: {
     type: Number,
     required: true

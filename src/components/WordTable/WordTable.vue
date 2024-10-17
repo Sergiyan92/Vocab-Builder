@@ -6,6 +6,7 @@ import UkraineIcon from '../icons/UkraineIcon.vue'
 import DeleteIcon from '../icons/DeleteIcon.vue'
 import EditIcon from '../icons/EditIcon.vue'
 import ProgresBar from '../ProgresBar/ProgresBar.vue'
+import EditWordModal from '../EditWordModal/EditWordModal.vue'
 // Параметри для пагінації
 const currentPage = ref(1)
 const perPage = 7
@@ -74,17 +75,22 @@ const isActionMenuOpen = ref({})
 const toggleActionMenu = (id) => {
   isActionMenuOpen.value[id] = !isActionMenuOpen.value[id]
 }
+const wordProgress = ref(75)
 
 const deleteWord = (id) => {
-  console.log('Deleting word with id:', id)
   if (id) {
     store.dispatch('deleteWord', id)
   } else {
     console.error('Word ID is undefined')
   }
 }
+const selectedWord = ref(null)
+const openEditModal = (word) => {
+  selectedWord.value = word
+  store.commit('openEditModal')
+}
 
-const wordProgress = ref(75)
+const handleEditWord = (id, data) => store.dispatch('editWord', data, id)
 </script>
 
 <template>
@@ -143,6 +149,7 @@ const wordProgress = ref(75)
                 <button
                   type="button"
                   class="flex items-center text-black font-standart text-[16px]"
+                  @click="openEditModal(word)"
                 >
                   <EditIcon class="mr-2" /> Edit
                 </button>
@@ -171,6 +178,7 @@ const wordProgress = ref(75)
       »
     </button>
   </div>
+  <EditWordModal v-if="selectedWord" :word="selectedWord" @submit="handleEditWord" />
 </template>
 
 <style scoped>
