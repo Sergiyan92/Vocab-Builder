@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.0",
+    "@mdi/font": "^7.4.47",
     "axios": "^1.7.7",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
+    "vuetify": "^3.7.0-beta.1",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

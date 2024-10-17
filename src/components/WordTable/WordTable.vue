@@ -5,6 +5,7 @@ import UKIcon from '../icons/UKIcon.vue'
 import UkraineIcon from '../icons/UkraineIcon.vue'
 import DeleteIcon from '../icons/DeleteIcon.vue'
 import EditIcon from '../icons/EditIcon.vue'
+import ProgresBar from '../ProgresBar/ProgresBar.vue'
 // Параметри для пагінації
 const currentPage = ref(1)
 const perPage = 7
@@ -75,13 +76,15 @@ const toggleActionMenu = (id) => {
 }
 
 const deleteWord = (id) => {
-  console.log('Deleting word with id:', id);
+  console.log('Deleting word with id:', id)
   if (id) {
     store.dispatch('deleteWord', id)
   } else {
     console.error('Word ID is undefined')
   }
 }
+
+const wordProgress = ref(75)
 </script>
 
 <template>
@@ -123,7 +126,9 @@ const deleteWord = (id) => {
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.en }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.ua }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.category }}</td>
-          <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">Progress</td>
+          <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">
+            <ProgresBar :progress="wordProgress" />
+          </td>
           <td class="text-h2 text-center pt-[22px] pl-[22px] pb-[22px]">
             <button type="button" @click="toggleActionMenu(word._id)">...</button>
             <div v-if="isActionMenuOpen[word._id]">
