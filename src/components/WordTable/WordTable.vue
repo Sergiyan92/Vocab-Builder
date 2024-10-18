@@ -85,12 +85,24 @@ const deleteWord = (id) => {
   }
 }
 const selectedWord = ref(null)
+
 const openEditModal = (word) => {
   selectedWord.value = word
   store.commit('openEditModal')
 }
 
-const handleEditWord = (id, data) => store.dispatch('editWord', data, id)
+const handleEditWord = (word) => {
+  if (!word._id) {
+    console.error('Word ID is missing:', word)
+    return // Вийти з функції, якщо ID відсутній
+  }
+
+  const { _id, ...data } = word // Дістаємо id і дані для редагування окремо
+  delete data.owner
+  delete data.progress
+
+  store.dispatch('editWord', { data, id: _id }) // Виклик дії з правильними параметрами
+}
 </script>
 
 <template>

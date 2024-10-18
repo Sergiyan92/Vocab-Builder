@@ -117,16 +117,14 @@ const store = createStore({
         // Можна додати обробку специфічних помилок або показати повідомлення користувачу
       }
     },
-    async editWord({ commit, dispatch }, data, id) {
-      console.log('data to edit', data)
-      console.log('id to edit', id)
+    async editWord({ commit }, { id, data }) {
       try {
-        const res = await editWord(data, id)
-        console.log(res.data)
+        const res = await editWord(data, id) // Передаємо id та data
+
         commit('editWord', res.data)
-        await dispatch('getAllWords')
+        
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     },
     async deleteWord({ commit, dispatch }, id) {
@@ -157,8 +155,8 @@ const store = createStore({
     openEditModal(state) {
       state.showEditWordModal = true
     },
-    closeEditModal(state){
-      state.showEditWordModal=false
+    closeEditModal(state) {
+      state.showEditWordModal = false
     },
     setCategory(state, category) {
       state.category = category
@@ -169,9 +167,13 @@ const store = createStore({
     addWord(state, newWord) {
       state.words.push(newWord) // Додаємо нове слово до списку слів
     },
-    editWord(state, editWord) {
-      state.words.push(editWord)
-    },
+editWord(state, updatedWord) {
+    const index = state.words.findIndex(word => word._id === updatedWord._id);
+    if (index !== -1) {
+      // Оновлюємо слово в масиві
+      state.words.splice(index, 1, updatedWord);
+    }
+  },
     deleteWord(state, id) {
       state.words = state.words.filter((word) => word._id !== id)
     },
