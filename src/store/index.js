@@ -28,11 +28,18 @@ const store = createStore({
   },
   actions: {
     async loadCategory({ commit }) {
+      const notification = useNotification()
       try {
         const response = await getCategoryWord()
         commit('setCategory', response)
       } catch (error) {
         console.error('Error loading category:', error.response ? error.response.data : error)
+        const errorMessage = error.response?.data?.message || 'loading category failed. Please try again.'
+        notification.notify({
+          title: 'Error loading category',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async loginUser({ commit }, data) {
@@ -73,11 +80,19 @@ const store = createStore({
       }
     },
     async currentUser({ commit }) {
+      const notification = useNotification()
       try {
         const res = await current()
         commit('getCurrent', res.data)
       } catch (error) {
-        console.log(error)
+        console.error('Error during loading current user:', error.response ? error.response.data : error)
+        const errorMessage =
+          error.response?.data?.message || 'Loading user info failed. Please try again.'
+        notification.notify({
+          title: 'Error loading current user',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async logoutUser({ commit }) {
@@ -91,57 +106,84 @@ const store = createStore({
       }
     },
     async getAllWords({ commit }, { page }) {
+      const notification = useNotification()
       try {
         const res = await getAllWords({ page })
         console.log(res.data)
         commit('allWords', res.data.results)
         commit('setTotalPages', res.data.totalPages)
       } catch (error) {
-        console.log(error)
+        console.log('Error during getAllWords:', error)
+        const errorMessage = error || 'Loading words failed. Please reaload.'
+        notification.notify({
+          title: 'Error during loading all words',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async addWord({ commit, dispatch }, data) {
+      const notification = useNotification()
       try {
-        // Додаємо слово
         const res = await addWord(data)
-        console.log(res.data)
 
-        // Комітимо додане слово в state
         commit('addWord', res.data)
-
-        // Оновлюємо список слів
         await dispatch('getAllWords')
       } catch (error) {
-        // Логування помилок
         console.error('Error adding word:', error)
-        // Можна додати обробку специфічних помилок або показати повідомлення користувачу
+        const errorMessage = error || 'Add word failed. Please try again'
+        notification.notify({
+          title: 'Error during add word',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async editWord({ commit }, { id, data }) {
+      const notification = useNotification()
       try {
         const res = await editWord(data, id) // Передаємо id та data
 
         commit('editWord', res.data)
-        
       } catch (error) {
-        console.error(error)
+        console.error('Error editing word:', error)
+        const errorMessage = error || 'Edit word failed. Please try again'
+        notification.notify({
+          title: 'Error during add word',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async deleteWord({ commit, dispatch }, id) {
+      const notification =useNotification()
       try {
         await deleteWord({ id })
         commit('deleteWord', id)
         dispatch('getAllWords')
       } catch (error) {
-        console.log(error)
+        console.log('Error delete word:',error)
+        const errorMessage = error || 'Delete word failed. Please try again'
+        notification.notify({
+          title: 'Error during delete word',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     },
     async getStatistic({ commit }) {
+      const notification =useNotification()
       try {
         const res = await getStatistics()
         commit('getStatistic', res.data.totalCount)
       } catch (error) {
-        console.log(error)
+        console.log('Error load statistic:',error)
+        const errorMessage = error || 'Load statistic failed. Please try again'
+        notification.notify({
+          title: 'Error during load statistic',
+          text: errorMessage,
+          type: 'error'
+        })
       }
     }
   },
@@ -167,13 +209,13 @@ const store = createStore({
     addWord(state, newWord) {
       state.words.push(newWord) // Додаємо нове слово до списку слів
     },
-editWord(state, updatedWord) {
-    const index = state.words.findIndex(word => word._id === updatedWord._id);
-    if (index !== -1) {
-      // Оновлюємо слово в масиві
-      state.words.splice(index, 1, updatedWord);
-    }
-  },
+    editWord(state, updatedWord) {
+      const index = state.words.findIndex((word) => word._id === updatedWord._id)
+      if (index !== -1) {
+        // Оновлюємо слово в масиві
+        state.words.splice(index, 1, updatedWord)
+      }
+    },
     deleteWord(state, id) {
       state.words = state.words.filter((word) => word._id !== id)
     },
