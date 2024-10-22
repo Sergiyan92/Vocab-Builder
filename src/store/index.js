@@ -105,7 +105,7 @@ const store = createStore({
         console.log(error)
       }
     },
-    async getAllWords({ commit }, { page }) {
+    async getAllWords({ commit }, { page = 1 } = {}) {
       const notification = useNotification()
       try {
         const res = await getAllWords({ page })

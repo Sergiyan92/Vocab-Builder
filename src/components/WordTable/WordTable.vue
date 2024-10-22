@@ -8,21 +8,22 @@ import EditIcon from '../icons/EditIcon.vue'
 import ProgresBar from '../ProgresBar/ProgresBar.vue'
 import EditWordModal from '../EditWordModal/EditWordModal.vue'
 // Параметри для пагінації
+const store = useStore()
+
 const currentPage = ref(1)
 const perPage = 7
 const totalPages = computed(() => store.getters.getTotalPages) // Отримуємо з Vuex
 
 const getPagesRange = () => {
   const total = totalPages.value
-  const range = []
+
 
   // Додаємо поточну сторінку та дві наступні
   const start = Math.max(currentPage.value, 1)
   const end = Math.min(currentPage.value + 2, total - 1)
 
-  for (let i = start; i <= end; i++) {
-    range.push(i)
-  }
+  const range = Array.from({ length: end - start + 1 }, (_, i) => start + i)
+
 
   // Додаємо останню сторінку з многоточієм, якщо необхідно
   if (currentPage.value + 2 < total) {
@@ -33,7 +34,6 @@ const getPagesRange = () => {
 }
 
 // Отримуємо слова при зміні сторінки
-const store = useStore()
 const words = computed(() => store.getters.getFilteredWords)
 
 const fetchWords = (page) => {
@@ -75,6 +75,7 @@ const isActionMenuOpen = ref({})
 const toggleActionMenu = (id) => {
   isActionMenuOpen.value[id] = !isActionMenuOpen.value[id]
 }
+
 const wordProgress = ref(75)
 
 const deleteWord = (id) => {
