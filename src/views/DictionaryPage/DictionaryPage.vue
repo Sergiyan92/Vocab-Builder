@@ -2,6 +2,7 @@
 import DashBord from '@/components/DashBord/DashBord.vue'
 import HeaderComponent from '@/components/Header/HeaderComponent.vue'
 import MainLayout from '@/components/MainLayout.vue'
+import TableWorld from '@/components/WordTable/TableWorld.vue';
 import WordTable from '@/components/WordTable/WordTable.vue'
 </script>
 
@@ -10,7 +11,8 @@ import WordTable from '@/components/WordTable/WordTable.vue'
     <HeaderComponent />
     <MainLayout>
       <DashBord />
-      <WordTable />
+      <TableWorld/>
+      <!-- <WordTable /> -->
     </MainLayout>
   </div>
 </template>
