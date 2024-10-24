@@ -1,7 +1,7 @@
-import RecommendComponent from '../components/Recommend/RecommendComponent.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const Dictionary = () => import('../views/DictionaryPage/DictionaryPage.vue')
+const Recommend=()=>import('@/views/RecommendPage/RecommendPage.vue')
 const Training = () => import('../components/Training/TrainingComponent.vue')
 const Home = () => import('../views/HomePage/HomePage.vue')
 const Auth = () => import('../views/Auth/AuthPage.vue')
@@ -11,7 +11,7 @@ const Login = () => import('../views/LoginPage/LoginPage.vue')
 const routes = [
   { path: '/', component: Home, redirect: '/auth/login', name: 'home' },
   { path: '/dictionary', component: Dictionary, name: 'dictionary' },
-  { path: '/recommend', component: RecommendComponent, name: 'recommend' },
+  { path: '/recommend', component: Recommend, name: 'recommend' },
   { path: '/training', component: Training, name: 'training' },
   {
     path: '/auth',

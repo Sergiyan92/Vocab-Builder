@@ -3,8 +3,6 @@
 
 <template>
   <main class="layout h-full ml-[100px] mr-[100px]">
-  
-
     <slot></slot>
   </main>
 </template>

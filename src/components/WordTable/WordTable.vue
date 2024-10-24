@@ -3,95 +3,56 @@ import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import UKIcon from '../icons/UKIcon.vue'
 import UkraineIcon from '../icons/UkraineIcon.vue'
-import DeleteIcon from '../icons/DeleteIcon.vue'
-import EditIcon from '../icons/EditIcon.vue'
-import ProgresBar from '../ProgresBar/ProgresBar.vue'
+import ActionMenu from '../ActionMenu/ActionMenu.vue'
+import PaginationComponent from '../Pagination/PaginationComponent.vue'
 import EditWordModal from '../EditWordModal/EditWordModal.vue'
-// Параметри для пагінації
+import ProgresBar from '../ProgresBar/ProgresBar.vue'
+import { useRoute } from 'vue-router'
+import ArrowRight from '../icons/ArrowRight.vue'
+
 const store = useStore()
+const route = useRoute()
+
+const isRecommendPage = computed(() => route.path === '/recommend')
+const isDictionaryPage = computed(() => route.path === '/dictionary')
 
 const currentPage = ref(1)
 const perPage = 7
-const totalPages = computed(() => store.getters.getTotalPages) // Отримуємо з Vuex
+const totalPages = computed(() => store.getters.getTotalPages)
 
-const getPagesRange = () => {
-  const total = totalPages.value
-
-
-  // Додаємо поточну сторінку та дві наступні
-  const start = Math.max(currentPage.value, 1)
-  const end = Math.min(currentPage.value + 2, total - 1)
-
-  const range = Array.from({ length: end - start + 1 }, (_, i) => start + i)
-
-
-  // Додаємо останню сторінку з многоточієм, якщо необхідно
-  if (currentPage.value + 2 < total) {
-    range.push('...', total)
-  }
-
-  return range
-}
-
-// Отримуємо слова при зміні сторінки
 const words = computed(() => store.getters.getFilteredWords)
 
 const fetchWords = (page) => {
-  store.dispatch('getAllWords', { page, perPage })
+  if (route.path === '/recommend') {
+    store.dispatch('getAllWords')
+  } else if (route.path === '/dictionary') {
+    store.dispatch('getAllWordsOwn', { page, perPage })
+  }
 }
 
-// Оновлення слів при завантаженні компонента та зміні сторінки
 onMounted(() => {
   fetchWords(currentPage.value)
 })
-
-const goToPage = (page) => {
-  if (typeof page === 'number') {
-    currentPage.value = page
-    fetchWords(page)
-  }
-}
-
-// Переходи на першу і останню сторінки
-const goToFirstPage = () => {
-  currentPage.value = 1
-  fetchWords(1)
-}
-
-const goToLastPage = () => {
-  currentPage.value = totalPages.value
-  fetchWords(totalPages.value)
-}
-
-// Повернення на попередню сторінку
-const goToPreviousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1
-    fetchWords(currentPage.value)
-  }
-}
 
 const isActionMenuOpen = ref({})
 const toggleActionMenu = (id) => {
   isActionMenuOpen.value[id] = !isActionMenuOpen.value[id]
 }
 
-const wordProgress = ref(75)
-
-const deleteWord = (id) => {
-  if (id) {
-    store.dispatch('deleteWord', id)
-  } else {
-    console.error('Word ID is undefined')
-  }
-}
 const selectedWord = ref(null)
 
 const openEditModal = (word) => {
-  selectedWord.value = word
+  selectedWord.value = word // Ensure the whole word object is passed
   store.commit('openEditModal')
 }
 
+const deleteWord = (id) => {
+  store.dispatch('deleteWord', id)
+}
+const handleAddMyWord = (word) => {
+  const { _id, ...data } = word
+  store.dispatch('addMyWord', { data, id: _id })
+}
 const handleEditWord = (word) => {
   if (!word._id) {
     console.error('Word ID is missing:', word)
@@ -103,6 +64,10 @@ const handleEditWord = (word) => {
   delete data.progress
 
   store.dispatch('editWord', { data, id: _id }) // Виклик дії з правильними параметрами
+}
+const updatePage = (page) => {
+  currentPage.value = page
+  fetchWords(page)
 }
 </script>
 
@@ -132,7 +97,7 @@ const handleEditWord = (word) => {
               >Category</span
             >
           </th>
-          <th class="h-[72px] w-[260px] text-left no-border-right">
+          <th v-if="isDictionaryPage" class="h-[72px] w-[260px] text-left no-border-right">
             <span class="text-h2 pt-[22px] pl-[22px] pb-[22px] text-black font-standart"
               >Progress</span
             >
@@ -145,55 +110,41 @@ const handleEditWord = (word) => {
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.en }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.ua }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.category }}</td>
-          <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">
-            <ProgresBar :progress="wordProgress" />
+          <td v-if="isDictionaryPage" class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">
+            <ProgresBar :progress="word.progress" />
           </td>
           <td class="text-h2 text-center pt-[22px] pl-[22px] pb-[22px]">
-            <button type="button" @click="toggleActionMenu(word._id)">...</button>
-            <div v-if="isActionMenuOpen[word._id]">
-              <div class="w-[124px] h-[80px] flex flex-col bg-main absolute pt-3 pb-3 pl-6 pr-6">
-                <button
-                  type="button"
-                  class="flex items-center text-black font-standart text-[16px] mb-2"
-                  @click="deleteWord(word._id)"
-                >
-                  <DeleteIcon class="mr-2" /> Delete
-                </button>
-                <button
-                  type="button"
-                  class="flex items-center text-black font-standart text-[16px]"
-                  @click="openEditModal(word)"
-                >
-                  <EditIcon class="mr-2" /> Edit
-                </button>
-              </div>
-            </div>
+            <button
+              type="button"
+              v-if="isRecommendPage"
+              class="w-[208px] flex items-center text-left text-[16px] text-black"
+              @click="handleAddMyWord(word)"
+            >
+              Add to dictionary <ArrowRight class="stroke-green ml-2" />
+            </button>
+            <button v-if="isDictionaryPage" type="button" @click="toggleActionMenu(word._id)">
+              ...
+            </button>
+            <ActionMenu
+              :isOpen="isActionMenuOpen[word._id]"
+              :wordId="word._id"
+              @deleteWord="deleteWord"
+              @editWord="openEditModal(word)"
+            />
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="pagination">
-    <button class="text-black" @click="goToFirstPage" :disabled="currentPage === 1">«</button>
-    <button class="text-black" @click="goToPreviousPage" :disabled="currentPage === 1">‹</button>
+  <PaginationComponent
+    :currentPage="currentPage"
+    :totalPages="totalPages"
+    @updatePage="updatePage"
+  />
 
-    <button
-      v-for="page in getPagesRange()"
-      :key="page"
-      @click="goToPage(page)"
-      :class="{ active: page === currentPage }"
-    >
-      {{ page }}
-    </button>
-
-    <button class="text-black" @click="goToLastPage" :disabled="currentPage === totalPages">
-      »
-    </button>
-  </div>
   <EditWordModal v-if="selectedWord" :word="selectedWord" @submit="handleEditWord" />
 </template>
-
 <style scoped>
 .words-table {
   width: 100%;

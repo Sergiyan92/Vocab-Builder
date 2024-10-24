@@ -1,10 +1,12 @@
 import { useNotification } from '@kyvg/vue3-notification'
 import { current, login, logout, registration } from '../api/auth'
 import {
+  addMyWord,
   addWord,
   deleteWord,
   editWord,
   getAllWords,
+  getAllWordsOwn,
   getCategoryWord,
   getStatistics
 } from '../api/wordApi/word'
@@ -34,7 +36,8 @@ const store = createStore({
         commit('setCategory', response)
       } catch (error) {
         console.error('Error loading category:', error.response ? error.response.data : error)
-        const errorMessage = error.response?.data?.message || 'loading category failed. Please try again.'
+        const errorMessage =
+          error.response?.data?.message || 'loading category failed. Please try again.'
         notification.notify({
           title: 'Error loading category',
           text: errorMessage,
@@ -85,7 +88,10 @@ const store = createStore({
         const res = await current()
         commit('getCurrent', res.data)
       } catch (error) {
-        console.error('Error during loading current user:', error.response ? error.response.data : error)
+        console.error(
+          'Error during loading current user:',
+          error.response ? error.response.data : error
+        )
         const errorMessage =
           error.response?.data?.message || 'Loading user info failed. Please try again.'
         notification.notify({
@@ -106,11 +112,21 @@ const store = createStore({
       }
     },
     async getAllWords({ commit }, { page = 1 } = {}) {
-      const notification = useNotification()
       try {
         const res = await getAllWords({ page })
+        console.log(res)
+        commit('getAllWords', res.data.results)
+        commit('setTotalPages', res.data.totalPages)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getAllWordsOwn({ commit }, { page = 1 } = {}) {
+      const notification = useNotification()
+      try {
+        const res = await getAllWordsOwn({ page })
         console.log(res.data)
-        commit('allWords', res.data.results)
+        commit('allWordsOwn', res.data.results)
         commit('setTotalPages', res.data.totalPages)
       } catch (error) {
         console.log('Error during getAllWords:', error)
@@ -139,6 +155,14 @@ const store = createStore({
         })
       }
     },
+    async addMyWord({ commit }, { id, data }) {
+      try {
+        const res = await addMyWord(data, id)
+        commit('addMyWord', res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async editWord({ commit }, { id, data }) {
       const notification = useNotification()
       try {
@@ -156,13 +180,13 @@ const store = createStore({
       }
     },
     async deleteWord({ commit, dispatch }, id) {
-      const notification =useNotification()
+      const notification = useNotification()
       try {
         await deleteWord({ id })
         commit('deleteWord', id)
         dispatch('getAllWords')
       } catch (error) {
-        console.log('Error delete word:',error)
+        console.log('Error delete word:', error)
         const errorMessage = error || 'Delete word failed. Please try again'
         notification.notify({
           title: 'Error during delete word',
@@ -172,12 +196,12 @@ const store = createStore({
       }
     },
     async getStatistic({ commit }) {
-      const notification =useNotification()
+      const notification = useNotification()
       try {
         const res = await getStatistics()
         commit('getStatistic', res.data.totalCount)
       } catch (error) {
-        console.log('Error load statistic:',error)
+        console.log('Error load statistic:', error)
         const errorMessage = error || 'Load statistic failed. Please try again'
         notification.notify({
           title: 'Error during load statistic',
@@ -203,11 +227,17 @@ const store = createStore({
     setCategory(state, category) {
       state.category = category
     },
-    allWords(state, wordsData) {
+    getAllWords(state, wordsData) {
+      state.words = wordsData
+    },
+    allWordsOwn(state, wordsData) {
       state.words = wordsData
     },
     addWord(state, newWord) {
       state.words.push(newWord) // Додаємо нове слово до списку слів
+    },
+    addMyWord(state, newWord) {
+      state.words.push(newWord)
     },
     editWord(state, updatedWord) {
       const index = state.words.findIndex((word) => word._id === updatedWord._id)
@@ -255,7 +285,7 @@ const store = createStore({
     isAddWordModalOpen: (state) => state.showAddWordModal,
     isEditModalOpen: (state) => state.showEditWordModal,
     getStatistics: (state) => state.statistics,
-    getWordsList: (state) => state.words,
+    getWordsListOwn: (state) => state.words,
     getFilteredWords: (state) => {
       let filteredWords = state.words
 

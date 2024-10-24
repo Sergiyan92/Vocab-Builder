@@ -23,11 +23,16 @@ export const getCategoryWord = () => {
 export const addWord = (data) => {
   return ClientFetch.post('/words/create', data)
 }
-export const editWord = ( data, id ) => {
+export const addMyWord = (data, id) => {
+  return ClientFetch.post(`/words/add/${id}`, data)
+}
+export const editWord = (data, id) => {
   return ClientFetch.patch(`/words/edit/${id}`, data)
 }
-
 export const getAllWords = ({ page }) => {
+  return ClientFetch.get(`/words/all?page=${page}`)
+}
+export const getAllWordsOwn = ({ page }) => {
   return ClientFetch.get(`/words/own?page=${page}`)
 }
 export const getStatistics = () => {

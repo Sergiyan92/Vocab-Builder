@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import ArrowRight from '../icons/ArrowRight.vue'
 import PlusIcon from '../icons/PlusIcon.vue'
 import SearchIcon from '../icons/SearchIcon.vue'
@@ -13,6 +13,7 @@ onMounted(() => {
   store.dispatch('getStatistic')
 })
 
+const route = useRoute()
 const store = useStore()
 
 const statistics = computed(() => store.getters.getStatistics)
@@ -84,11 +85,15 @@ const selectVerbType = computed({
     </div>
 
     <div class="flex stat">
-      <p><span class="text-black opacity-50">To study:</span> {{ statistics }}</p>
-      <button class="mr-[16px] ml-[16px] items-center flex" @click="openAddWordModal">
+      <p class="mr-[16px]"><span class="text-black opacity-50 ">To study:</span> {{ statistics }}</p>
+      <button
+        v-if="route.name !== 'recommend'"
+        class="  items-center flex"
+        @click="openAddWordModal"
+      >
         Add word <PlusIcon class="ml-[8px]" />
       </button>
-      <router-link to="/training" class="flex items-center">
+      <router-link to="/training" class="flex items-center ml-[16px]">
         Train oneself <ArrowRight class="stroke-green ml-[8px]" />
       </router-link>
     </div>
