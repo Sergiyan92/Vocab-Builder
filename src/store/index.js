@@ -179,12 +179,16 @@ const store = createStore({
         })
       }
     },
-    async deleteWord({ commit, dispatch }, id) {
+    async deleteWord({ commit, dispatch }, { id, isDictionaryPage }) {
       const notification = useNotification()
       try {
         await deleteWord({ id })
         commit('deleteWord', id)
-        dispatch('getAllWords')
+        if (isDictionaryPage) {
+          dispatch('getAllWordsOwn')
+        } else {
+          dispatch('getAllWords')
+        }
       } catch (error) {
         console.log('Error delete word:', error)
         const errorMessage = error || 'Delete word failed. Please try again'

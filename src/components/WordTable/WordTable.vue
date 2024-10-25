@@ -23,9 +23,9 @@ const totalPages = computed(() => store.getters.getTotalPages)
 const words = computed(() => store.getters.getFilteredWords)
 
 const fetchWords = (page) => {
-  if (route.path === '/recommend') {
-    store.dispatch('getAllWords')
-  } else if (route.path === '/dictionary') {
+  if (isRecommendPage.value) {
+    store.dispatch('getAllWords', { page, perPage })
+  } else if (isDictionaryPage.value) {
     store.dispatch('getAllWordsOwn', { page, perPage })
   }
 }
@@ -47,8 +47,9 @@ const openEditModal = (word) => {
 }
 
 const deleteWord = (id) => {
-  store.dispatch('deleteWord', id)
+  store.dispatch('deleteWord', { id, isDictionaryPage: isDictionaryPage.value })
 }
+
 const handleAddMyWord = (word) => {
   const { _id, ...data } = word
   store.dispatch('addMyWord', { data, id: _id })
@@ -111,7 +112,7 @@ const updatePage = (page) => {
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.ua }}</td>
           <td class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">{{ word.category }}</td>
           <td v-if="isDictionaryPage" class="text-h2 text-left pt-[22px] pl-[22px] pb-[22px]">
-            <ProgresBar :progress="word.progress" />
+            <ProgresBar :progress="word?.progress || 0" />
           </td>
           <td class="text-h2 text-center pt-[22px] pl-[22px] pb-[22px]">
             <button
