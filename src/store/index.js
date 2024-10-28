@@ -18,6 +18,7 @@ const store = createStore({
     return {
       category: [],
       words: [],
+      myWords: [],
       statistics: '',
       searchQuery: '', // Значення пошуку
       selectedCategory: 'all', // Поточна вибрана категорія
@@ -235,13 +236,13 @@ const store = createStore({
       state.words = wordsData
     },
     allWordsOwn(state, wordsData) {
-      state.words = wordsData
+      state.myWords = wordsData
     },
     addWord(state, newWord) {
       state.words.push(newWord) // Додаємо нове слово до списку слів
     },
     addMyWord(state, newWord) {
-      state.words.push(newWord)
+      state.myWords.push(newWord)
     },
     editWord(state, updatedWord) {
       const index = state.words.findIndex((word) => word._id === updatedWord._id)
@@ -290,6 +291,7 @@ const store = createStore({
     isEditModalOpen: (state) => state.showEditWordModal,
     getStatistics: (state) => state.statistics,
     getWordsListOwn: (state) => state.words,
+    getMyWords:(state) => state.myWords,    
     getFilteredWords: (state) => {
       let filteredWords = state.words
 
